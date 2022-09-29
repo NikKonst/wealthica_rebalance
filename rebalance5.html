@@ -64,8 +64,8 @@
             console.log(data);
             for (const d in data) {
                 console.log(d);
-                let symbol = d['security']['symbol'];
-                let value = parseFloat(d['value']);
+                let symbol = data[d]['security']['symbol'];
+                let value = parseFloat(data[d]['value']);
 
                 res_html = res_html + '<tr><td>' + symbol + '</td><td>' + value + '</td></tr>';
             }
