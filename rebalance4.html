@@ -62,7 +62,7 @@
         function generateTable(data) {
             var res_html = '<table><tr><th>Symbol</th><th>Current Value</th></tr>';
             console.log(data);
-            for (let d in data) {
+            for (const d in data) {
                 console.log(d);
                 let symbol = d['security']['symbol'];
                 let value = parseFloat(d['value']);
