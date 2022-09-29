@@ -25,22 +25,7 @@
     <!--    <button type="button" disabled="disabled" id="saveData">Save Data</button>-->
 </p>
 <textarea id="data" rows="8" cols="100"></textarea>
-<div id="result">
-    <table>
-        <tr>
-            <th>Symbol</th>
-            <th>Current Value</th>
-        </tr>
-        <!--        <tr>-->
-        <!--            <td>Alfreds Futterkiste</td>-->
-        <!--            <td>Maria Anders</td>-->
-        <!--        </tr>-->
-        <!--        <tr>-->
-        <!--            <td>Centro comercial Moctezuma</td>-->
-        <!--            <td>Francisco Chang</td>-->
-        <!--        </tr>-->
-    </table>
-</div>
+<div id="result"></div>
 
 <script type="text/javascript">
     var addon, addonOptions;
@@ -53,11 +38,13 @@
             // render using the passed in options (filters, language, etc.)
             addonOptions = options;
             $('button').removeAttr('disabled');
-            showAddonData(addonOptions.data, true);
+            generateTable(addonOptions.data);
+            // showAddonData(addonOptions.data, true);
         }).on('update', function (options) {
             // Filters have been updated and Dashboard is passing in updated options
             addonOptions = _.extend(addonOptions, options);
-            showAddonData(addonOptions.data);
+            generateTable(addonOptions.data);
+            // showAddonData(addonOptions.data);
         });
 
         $('#getPositions').on('click', function () {
@@ -73,13 +60,14 @@
         });
 
         function generateTable(data) {
-            var res_html = '';
+            var res_html = '<table><tr><th>Symbol</th><th>Current Value</th></tr>';
             for (let d in data) {
                 let symbol = d['security']['symbol'];
                 let value = parseFloat(d['value']);
 
                 res_html = res_html + '<tr><td>' + symbol + '</td><td>' + value + '</td></tr>';
             }
+            res_html = res_html + '</table>';
             return res_html;
         }
 
