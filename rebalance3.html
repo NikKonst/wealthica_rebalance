@@ -51,7 +51,7 @@
             $(this).attr('disabled', 'disabled');
 
             addon.api.getPositions(getQueryFromOptions(addonOptions)).then(function (response) {
-                $('#result').html(generateTable(response.json));
+                $('#result').html(generateTable(response));
             }).catch(function (err) {
                 $('#result').html('Error:<br><code>' + err + '</code>');
             }).finally(function () {
@@ -61,7 +61,9 @@
 
         function generateTable(data) {
             var res_html = '<table><tr><th>Symbol</th><th>Current Value</th></tr>';
+            console.log(data);
             for (let d in data) {
+                console.log(d);
                 let symbol = d['security']['symbol'];
                 let value = parseFloat(d['value']);
 
