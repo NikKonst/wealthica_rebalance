@@ -66,9 +66,9 @@
             for (const d in data) {
                 console.log(d);
                 let symbol = data[d]['security']['symbol'];
-                let units = parseFloat(data[d]['investments']['quantity']);
+                let units = parseFloat(data[d]['quantity']);
                 let price = parseFloat(data[d]['security']['last_price']);
-                let value = parseFloat(data[d]['investments']['value']);
+                let value = parseFloat(data[d]['value']);
 
                 total_value = total_value + value;
                 tdata.push({'symbol': symbol, 'units': units, 'value': value});
