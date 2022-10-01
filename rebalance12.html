@@ -21,7 +21,8 @@
 <p>
     <button type="button" disabled="disabled" id="getPositions">List Positions</button>
 </p>
-<input type="number">
+Add:
+<input type="number" id="addValue"/>
 <div id="result"></div>
 
 <script type="text/javascript">
@@ -85,11 +86,15 @@
 
         function generateTable(data) {
             var res_html = '<table><tr><th>Symbol</th><th>Units</th><th>Value</th>' +
-                '<th>Percent</th><th>Target Percent</th></tr>';
+                '<th>Percent</th><th>Target Percent</th>' +
+                '<th>Add</th><th>Percent after rebalance</th></tr>';
             console.log(data);
             var tdata = [];
             var total_value = 0;
             var total_target_percent = 0;
+
+            var add_value = parseFloat(document.getElementById('addValue').value);
+            var add_real = 0;
 
             for (const d in data) {
                 console.log(d);
@@ -110,14 +115,25 @@
                 let value = tdata[d]['value'];
                 let percent = (value / total_value) * 100;
                 let target_percent = tdata[d]['target_percent'];
+
+                var add_val = (total_value + add_value) * target_percent - value;
+                add_val = Math.round(add_val);
+                if (Math.abs(add_val) < 10) {
+                    add_val = 0;
+                }
+
+                add_real = add_real + add_val;
+
                 res_html = res_html +
-                    `<tr><th>${symbol}</th><th>${units}</th><th>${value}</th>` +
-                    `<th>${percent.toFixed(2)}</th><th>${target_percent.toFixed(2)}</th></tr>`;
+                    `<tr><td>${symbol}</td><td>${units}</td><td>${value}$</td>` +
+                    `<td>${percent.toFixed(2)}%</td><td>${target_percent.toFixed(2)}%</td>` +
+                    `<td>${add_val}</td><td></td></tr>`;
             }
 
             res_html = res_html +
-                `<tr><th><b>TOTAL</b></th><th></th><th><b>${total_value.toFixed(2)}</b></th>` +
-                `<th></th><th>${total_target_percent.toFixed(2)}</th></tr>`;
+                `<tr><th>TOTAL</th><th></th><th>${total_value.toFixed(2)}$</th>` +
+                `<th></th><th>${total_target_percent.toFixed(2)}%</th>` +
+                `<th>${add_real}</th><th></th></tr>`;
 
             res_html = res_html + '</table>';
             return res_html;
