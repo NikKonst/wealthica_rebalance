@@ -116,7 +116,7 @@ Add:
                 let percent = (value / total_value) * 100;
                 let target_percent = tdata[d]['target_percent'];
 
-                var add_val = (total_value + add_value) * target_percent - value;
+                var add_val = (total_value + add_value) * (target_percent / 100) - value;
                 add_val = Math.round(add_val);
                 if (Math.abs(add_val) < 10) {
                     add_val = 0;
