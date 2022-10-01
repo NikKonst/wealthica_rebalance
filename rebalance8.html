@@ -45,26 +45,16 @@
             // showAddonData(addonOptions.data);
         });
 
-        // $('#getPositions').on('click', function () {
-        //     $(this).attr('disabled', 'disabled');
-        //
-        //     addon.api.getPositions(getQueryFromOptions(addonOptions)).then(function (response) {
-        //         $('#result').html(generateTable(response));
-        //     }).catch(function (err) {
-        //         $('#result').html('Error:<br><code>' + err + '</code>');
-        //     }).finally(function () {
-        //         $('#getPositions').removeAttr('disabled');
-        //     });
-        // });
-
         $('#getPositions').on('click', function () {
-            $('#result').html(generateTable(
-                [{
-                    'security': {
-                        'symbol': 'AAA'
-                    }
-                }]
-            ));
+            $(this).attr('disabled', 'disabled');
+
+            addon.api.getPositions(getQueryFromOptions(addonOptions)).then(function (response) {
+                $('#result').html(generateTable(response));
+            }).catch(function (err) {
+                $('#result').html('Error:<br><code>' + err + '</code>');
+            }).finally(function () {
+                $('#getPositions').removeAttr('disabled');
+            });
         });
 
         function generateTable(data) {
