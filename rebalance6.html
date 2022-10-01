@@ -19,10 +19,8 @@
 <h3>This is the Wealthica Rebalance Add-on.</h3>
 <p>Try some of the actions below:</p>
 <p>
-    <!--    <button type="button" disabled="disabled" id="getTransactions">List Transactions</button>-->
-    <button type="button" disabled="disabled" id="getPositions">List Positions</button>
-    <!--    <button type="button" disabled="disabled" id="addTransaction">Add Transaction</button>-->
-    <!--    <button type="button" disabled="disabled" id="saveData">Save Data</button>-->
+    <button type="button" id="getPositions">List Positions</button>
+<!--    <button type="button" disabled="disabled" id="getPositions">List Positions</button>-->
 </p>
 <textarea id="data" rows="8" cols="100"></textarea>
 <div id="result"></div>
@@ -47,27 +45,51 @@
             // showAddonData(addonOptions.data);
         });
 
-        $('#getPositions').on('click', function () {
-            $(this).attr('disabled', 'disabled');
+        // $('#getPositions').on('click', function () {
+        //     $(this).attr('disabled', 'disabled');
+        //
+        //     addon.api.getPositions(getQueryFromOptions(addonOptions)).then(function (response) {
+        //         $('#result').html(generateTable(response));
+        //     }).catch(function (err) {
+        //         $('#result').html('Error:<br><code>' + err + '</code>');
+        //     }).finally(function () {
+        //         $('#getPositions').removeAttr('disabled');
+        //     });
+        // });
 
-            addon.api.getPositions(getQueryFromOptions(addonOptions)).then(function (response) {
-                $('#result').html(generateTable(response));
-            }).catch(function (err) {
-                $('#result').html('Error:<br><code>' + err + '</code>');
-            }).finally(function () {
-                $('#getPositions').removeAttr('disabled');
-            });
+        $('#getPositions').on('click', function () {
+            $('#result').html(generateTable(
+                [{
+                    'security': {
+                        'symbol': 'AAA'
+                    }
+                }]
+            ));
         });
 
         function generateTable(data) {
-            var res_html = '<table><tr><th>Symbol</th><th>Current Value</th></tr>';
+            var res_html = '<table><tr><th>Symbol</th><th>Units</th><th>Value</th><th>Percent</th></tr>';
             console.log(data);
+            var tdata = [];
+            var total_value = 0;
             for (const d in data) {
                 console.log(d);
                 let symbol = data[d]['security']['symbol'];
-                let value = parseFloat(data[d]['value']);
+                let units = parseFloat(data[d]['quantity']);
+                let price = parseFloat(data[d]['last_price']);
+                let value = units * price;
 
-                res_html = res_html + '<tr><td>' + symbol + '</td><td>' + value + '</td></tr>';
+                total_value = total_value + value;
+                tdata.add({'symbol': symbol, 'units': units, 'value': value});
+            }
+
+            for (const d in tdata) {
+                let symbol = tdata[d]['symbol'];
+                let units = tdata[d]['units'];
+                let value = tdata[d]['value'];
+                let percent = (value / total_value) * 100;
+                res_html = res_html +
+                    `<tr><th>${symbol}</th><th>${units}</th><th>${value}</th><th>${percent.toFixed(2)}</th></tr>`;
             }
             res_html = res_html + '</table>';
             return res_html;
