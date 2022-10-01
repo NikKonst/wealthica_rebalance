@@ -80,7 +80,7 @@
                 let value = units * price;
 
                 total_value = total_value + value;
-                tdata.add({'symbol': symbol, 'units': units, 'value': value});
+                tdata.push({'symbol': symbol, 'units': units, 'value': value});
             }
 
             for (const d in tdata) {
