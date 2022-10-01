@@ -19,14 +19,40 @@
 <h3>This is the Wealthica Rebalance Add-on.</h3>
 <p>Try some of the actions below:</p>
 <p>
-    <button type="button" id="getPositions">List Positions</button>
-<!--    <button type="button" disabled="disabled" id="getPositions">List Positions</button>-->
+    <button type="button" disabled="disabled" id="getPositions">List Positions</button>
 </p>
-<textarea id="data" rows="8" cols="100"></textarea>
+<input type="number">
 <div id="result"></div>
 
 <script type="text/javascript">
     var addon, addonOptions;
+
+    let target_percents = {
+        'TIP': 7.5,
+        'ISTB': 7.5,
+        'IEF': 7.5,
+        'TLT': 7.5,
+        'TSLA': 2.5,
+        'AAPL': 2.5,
+        'AMZN': 2.5,
+        'MSFT': 2.5,
+        'META': 2.5,
+        'GOOGL': 2.5,
+        'NFLX': 2.5,
+        'PFE': 2.5,
+        'DIS': 2.5,
+        'ILMN': 2.5,
+        'MRNA': 2.5,
+        'CNDX': 7.5,
+        'CSP1.L': 7.5,
+        'USRT': 5,
+        'ARKG': 2.5,
+        'GLD': 10,
+        'BTC': 2.5,
+        'ETH': 2.5,
+        'MANA': 2.5,
+        'MATIC': 2.5,
+    };
 
     $(function () {
         addon = new Addon();
@@ -58,10 +84,12 @@
         });
 
         function generateTable(data) {
-            var res_html = '<table><tr><th>Symbol</th><th>Units</th><th>Value</th><th>Percent</th></tr>';
+            var res_html = '<table><tr><th>Symbol</th><th>Units</th><th>Value</th>' +
+                '<th>Percent</th><th>Target Percent</th></tr>';
             console.log(data);
             var tdata = [];
             var total_value = 0;
+            var total_target_percent = 0;
 
             for (const d in data) {
                 console.log(d);
@@ -69,9 +97,11 @@
                 let units = parseFloat(data[d]['quantity']);
                 let price = parseFloat(data[d]['security']['last_price']);
                 let value = parseFloat(data[d]['value']);
+                let target_percent = target_percents[symbol];
 
                 total_value = total_value + value;
-                tdata.push({'symbol': symbol, 'units': units, 'value': value});
+                total_target_percent = total_target_percent + target_percent;
+                tdata.push({'symbol': symbol, 'units': units, 'value': value, 'target_percent': target_percent});
             }
 
             for (const d in tdata) {
@@ -79,12 +109,15 @@
                 let units = tdata[d]['units'];
                 let value = tdata[d]['value'];
                 let percent = (value / total_value) * 100;
+                let target_percent = tdata[d]['target_percent'];
                 res_html = res_html +
-                    `<tr><th>${symbol}</th><th>${units}</th><th>${value}</th><th>${percent.toFixed(2)}</th></tr>`;
+                    `<tr><th>${symbol}</th><th>${units}</th><th>${value}</th>` +
+                    `<th>${percent.toFixed(2)}</th><th>${target_percent.toFixed(2)}</th></tr>`;
             }
 
             res_html = res_html +
-                `<tr><th><b>TOTAL</b></th><th></th><th><b>${total_value}</b></th><th></th></tr>`;
+                `<tr><th><b>TOTAL</b></th><th></th><th><b>${total_value.toFixed(2)}</b></th>` +
+                `<th></th><th>${total_target_percent.toFixed(2)}</th></tr>`;
 
             res_html = res_html + '</table>';
             return res_html;
